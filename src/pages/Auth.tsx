@@ -28,58 +28,39 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
+        const { error } = await supabase.auth.signInWithPassword({ email: formData.email, password: formData.password });
         if (error) throw error;
         toast.success("Welcome back!");
         navigate("/");
       } else {
-        if (formData.password !== formData.confirmPassword) {
-          toast.error("Passwords don't match");
-          setLoading(false);
-          return;
-        }
-        if (formData.password.length < 8) {
-          toast.error("Password must be at least 8 characters");
-          setLoading(false);
-          return;
-        }
+        if (formData.password !== formData.confirmPassword) { toast.error("Passwords don't match"); setLoading(false); return; }
+        if (formData.password.length < 8) { toast.error("Password must be at least 8 characters"); setLoading(false); return; }
         const { error } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: {
-            data: {
-              full_name: formData.fullName,
-              phone: formData.phone,
-              role: formData.role,
-            },
-          },
+          email: formData.email, password: formData.password,
+          options: { data: { full_name: formData.fullName, phone: formData.phone, role: formData.role } },
         });
         if (error) throw error;
         toast.success("Account created! Please check your email to verify.");
         navigate("/");
       }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (error: any) { toast.error(error.message); } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-accent to-background px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-card rounded-2xl shadow-xl border border-border p-8">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <div className="absolute inset-0 grid-bg opacity-20" />
+      <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-primary/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/3 right-1/3 w-60 h-60 bg-[hsl(190,90%,50%,0.06)] rounded-full blur-[100px]" />
+      
+      <div className="relative w-full max-w-md">
+        <div className="glass-card rounded-2xl p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 glow-blue">
               <Shield className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-display font-bold text-foreground">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -91,73 +72,36 @@ const Auth = () => {
             {!isLogin && (
               <>
                 <div>
-                  <Label htmlFor="fullName">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-muted-foreground">Full Name</Label>
                   <div className="relative mt-1">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="fullName"
-                      name="fullName"
-                      placeholder="John Doe"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      className="pl-10"
-                      required
-                    />
+                    <Input id="fullName" name="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50" required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-muted-foreground">Phone Number</Label>
                   <div className="relative mt-1">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="phone"
-                      name="phone"
-                      placeholder="+91 9876543210"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="pl-10"
-                    />
+                    <Input id="phone" name="phone" placeholder="+91 9876543210" value={formData.phone} onChange={handleChange} className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50" />
                   </div>
                 </div>
               </>
             )}
 
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-muted-foreground">Email</Label>
               <div className="relative mt-1">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="pl-10"
-                  required
-                />
+                <Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50" required />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-muted-foreground">Password</Label>
               <div className="relative mt-1">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="pl-10 pr-10"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
+                <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={formData.password} onChange={handleChange} className="pl-10 pr-10 bg-secondary/50 border-border/50 focus:border-primary/50" required />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
@@ -166,34 +110,21 @@ const Auth = () => {
             {!isLogin && (
               <>
                 <div>
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword" className="text-muted-foreground">Confirm Password</Label>
                   <div className="relative mt-1">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="pl-10"
-                      required
-                    />
+                    <Input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50" required />
                   </div>
                 </div>
-
                 <div>
-                  <Label>Role</Label>
+                  <Label className="text-muted-foreground">Role</Label>
                   <div className="flex gap-3 mt-1">
                     {(["citizen", "authority"] as const).map((r) => (
-                      <button
-                        key={r}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, role: r })}
-                        className={`flex-1 py-2 px-4 rounded-lg border text-sm font-medium transition-all ${
+                      <button key={r} type="button" onClick={() => setFormData({ ...formData, role: r })}
+                        className={`flex-1 py-2.5 px-4 rounded-lg border text-sm font-medium transition-all duration-200 ${
                           formData.role === r
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-muted text-muted-foreground border-border hover:border-primary/50"
+                            ? "bg-primary/20 text-primary border-primary/40 shadow-[0_0_15px_hsl(217,91%,55%,0.15)]"
+                            : "bg-secondary/30 text-muted-foreground border-border/50 hover:border-primary/30"
                         }`}
                       >
                         {r.charAt(0).toUpperCase() + r.slice(1)}
@@ -204,24 +135,19 @@ const Auth = () => {
               </>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full glow-blue mt-2" disabled={loading}>
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground" />
                   {isLogin ? "Signing in..." : "Creating account..."}
                 </span>
-              ) : (
-                isLogin ? "Sign In" : "Create Account"
-              )}
+              ) : (isLogin ? "Sign In" : "Create Account")}
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-primary font-medium hover:underline"
-            >
+            <button onClick={() => setIsLogin(!isLogin)} className="text-primary font-medium hover:underline">
               {isLogin ? "Sign Up" : "Sign In"}
             </button>
           </p>

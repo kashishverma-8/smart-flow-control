@@ -25,24 +25,30 @@ const modules = [
 ];
 
 const FeaturesSection = () => (
-  <section id="features" className="py-20 bg-muted/30">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="features" className="relative py-24">
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent" />
+    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">System Modules</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
+          <span className="text-foreground">System </span>
+          <span className="gradient-text">Modules</span>
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
           A comprehensive suite of AI-powered modules for complete traffic management.
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {modules.map((mod) => (
           <div
             key={mod.title}
-            className="group bg-card border border-border rounded-xl p-6 hover:shadow-lg hover:border-primary/30 transition-all"
+            className="group glass-card-hover rounded-xl p-6 cursor-pointer"
           >
-            <mod.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform" />
-            <h3 className="text-base font-semibold text-foreground mb-2">{mod.title}</h3>
-            <p className="text-sm text-muted-foreground mb-3">{mod.desc}</p>
-            <span className="inline-block text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:shadow-[0_0_20px_hsl(217,91%,55%,0.2)] transition-all duration-300">
+              <mod.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-base font-display font-semibold text-foreground mb-2">{mod.title}</h3>
+            <p className="text-sm text-muted-foreground mb-3 leading-relaxed">{mod.desc}</p>
+            <span className="inline-block text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
               {mod.output}
             </span>
           </div>
